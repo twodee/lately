@@ -24,14 +24,15 @@ class HeadlineAdapter(val context: Context,
 
   override fun onBindViewHolder(holder: HeadlineViewHolder, i: Int) {
     holder.headlineText.text = headlines[i].text
+    holder.itemView.setBackgroundColor(if (selectedIndex == i) Color.LTGRAY else Color.TRANSPARENT)
+
     holder.itemView.setOnClickListener {
       val oldSelectedIndex = selectedIndex
-      selectedIndex = i
-      clickListener(headlines[i])
+      selectedIndex = holder.adapterPosition
+      clickListener(headlines[holder.adapterPosition])
       notifyItemChanged(oldSelectedIndex)
       notifyItemChanged(selectedIndex)
     }
-    holder.itemView.setBackgroundColor(if (selectedIndex == i) Color.LTGRAY else Color.TRANSPARENT)
   }
 }
 
