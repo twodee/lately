@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class HeadlineAdapter(val context: Context,
-                      val headlines: List<Headline>,
-                      val clickListener: (Headline) -> Unit): RecyclerView.Adapter<HeadlineViewHolder>() {
+class HeadlineAdapter(private val context: Context,
+                      private val headlines: List<Headline>,
+                      private val clickListener: (Headline) -> Unit): RecyclerView.Adapter<HeadlineViewHolder>() {
 
   private var selectedIndex = RecyclerView.NO_POSITION
 
@@ -19,23 +19,32 @@ class HeadlineAdapter(val context: Context,
   override fun onCreateViewHolder(parent: ViewGroup, p1: Int): HeadlineViewHolder {
     val inflater = LayoutInflater.from(context)
     val view = inflater.inflate(R.layout.headline_item, parent, false)
-    return HeadlineViewHolder(view)
+    val holder = HeadlineViewHolder(view)
+
+    view.setOnClickListener {
+      clickListener(headlines[holder.adapterPosition])
+
+      val oldSelectedIndex = selectedIndex
+      selectedIndex = holder.adapterPosition
+      notifyItemChanged(oldSelectedIndex)
+      notifyItemChanged(selectedIndex)
+    }
+
+    return holder
   }
 
   override fun onBindViewHolder(holder: HeadlineViewHolder, i: Int) {
     holder.headlineText.text = headlines[i].text
-    holder.itemView.setBackgroundColor(if (selectedIndex == i) Color.LTGRAY else Color.TRANSPARENT)
-
-    holder.itemView.setOnClickListener {
-      val oldSelectedIndex = selectedIndex
-      selectedIndex = holder.adapterPosition
-      clickListener(headlines[holder.adapterPosition])
-      notifyItemChanged(oldSelectedIndex)
-      notifyItemChanged(selectedIndex)
-    }
+    holder.isActive = selectedIndex == i
   }
 }
 
 class HeadlineViewHolder(view: View) : RecyclerView.ViewHolder(view) {
   val headlineText: TextView = view.findViewById(R.id.headlineText)
+
+  var isActive: Boolean = false
+    set(value) {
+      field = value
+      itemView.setBackgroundColor(if (field) Color.LTGRAY else Color.TRANSPARENT)
+    }
 }

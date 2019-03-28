@@ -4,8 +4,8 @@ import android.os.AsyncTask
 import java.lang.ref.WeakReference
 import java.net.URL
 
-class HeadlinesDownloader(activity: MainActivity) : AsyncTask<URL, Void, List<Headline>>() {
-  private val context = WeakReference(activity)
+class HeadlinesDownloader(context: HeadlinesFragment) : AsyncTask<URL, Void, List<Headline>>() {
+  private val context = WeakReference(context)
 
   override fun doInBackground(vararg urls: URL): List<Headline> {
     val result = getJson(urls[0])

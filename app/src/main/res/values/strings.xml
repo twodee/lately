@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">Lately</string>
+  <string name="sources_label">Sources</string>
+  <string name="headlines_label">Headlines</string>
 </resources>

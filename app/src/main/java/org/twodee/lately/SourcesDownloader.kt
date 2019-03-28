@@ -2,20 +2,18 @@ package org.twodee.lately
 
 import android.os.AsyncTask
 import java.lang.ref.WeakReference
+import java.net.URL
 
-class SourcesDownloader(activity: MainActivity) : AsyncTask<Void, Void, List<Source>>() {
-  private val context = WeakReference(activity)
+class SourcesDownloader(context: HeadlinesFragment) : AsyncTask<URL, Void, List<Source>>() {
+  private val context = WeakReference(context)
 
-  override fun doInBackground(vararg p0: Void?): List<Source> {
-    val parameters = mapOf("language" to "en", "apiKey" to KEY)
-    val result = getJson(parameterizeUrl("https://newsapi.org/v2/sources", parameters))
-
+  override fun doInBackground(vararg urls: URL): List<Source> {
+    val result = getJson(urls[0])
     val sourcesJson = result.getJSONArray("sources")
     val sources = (0 until sourcesJson.length()).map { i ->
       val source = sourcesJson.getJSONObject(i)
       Source(source.getString("id"), source.getString("name"))
     }
-
     return sources
   }
 
